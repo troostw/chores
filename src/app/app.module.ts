@@ -10,18 +10,37 @@ import { ChorenavComponent } from './chorenav/chorenav.component';
 import { LayoutModule } from '@angular/cdk/layout';
 import { MatToolbarModule, MatButtonModule, MatSidenavModule, MatIconModule, MatListModule, MatGridListModule, MatCardModule, MatMenuModule } from '@angular/material';
 import { ChoreshomeComponent } from './choreshome/choreshome.component';
+import { LoginComponent } from './login/login.component';
+import { SocialLoginModule, AuthServiceConfig, GoogleLoginProvider} from "angular-6-social-login";
+
+
+// Configs 
+export function getAuthServiceConfigs() {
+  let config = new AuthServiceConfig(
+    [
+      {
+        id: GoogleLoginProvider.PROVIDER_ID,
+        provider: new GoogleLoginProvider("412933139971-fir4cb8mjblv8pna5bkomfdj8d5qmg7n")
+      }
+    ]
+);
+  return config;
+}
+
 
 @NgModule({
   declarations: [
     AppComponent,
     ChorenavComponent,
-    ChoreshomeComponent
+    ChoreshomeComponent,
+    LoginComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production }),
     BrowserAnimationsModule,
+    SocialLoginModule,
     LayoutModule,
     MatToolbarModule,
     MatButtonModule,
@@ -32,7 +51,12 @@ import { ChoreshomeComponent } from './choreshome/choreshome.component';
     MatCardModule,
     MatMenuModule
   ],
-  providers: [],
+  providers: [
+    {
+      provide: AuthServiceConfig,
+      useFactory: getAuthServiceConfigs
+    }
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
