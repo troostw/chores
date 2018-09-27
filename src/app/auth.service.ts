@@ -1,21 +1,38 @@
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
+import { Router} from '@angular/router';
 import { AngularFireAuth } from '@angular/fire/auth';
+import { AngularFirestore, AngularFirestoreDocument} from '@angular/fire/firestore';
 import { auth } from 'firebase/app';
+import { switchMap, take, map } from 'rxjs/operators';
 
 declare var gapi: any;
+
+interface User {
+  uid: string;
+  email?: string | null;
+  photoURL?: string;
+  displayName?: string;
+}
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
   
-  user$: Observable<firebase.User>; 
+  user: Observable<User | null>;
   calendarItems: any[];
 
-  constructor(public afAuth: AngularFireAuth) { 
+  constructor(public afAuth: AngularFireAuth, private afs: AngularFirestore, private router: Router) { 
     this.initClient();
-    this.user$ = afAuth.authState;
+    this.user = this.afAuth.authState.pipe(
+      switchMap(user => {
+        if (user) {
+          return this.afs.doc<User>(`users/${user.uid}`).valueChanges();
+        } else {
+          return of(null);
+        }
+      }))
   }
 
   // Initialize the Google API client with desired scopes
@@ -49,7 +66,11 @@ export class AuthService {
 
     const credential = auth.GoogleAuthProvider.credential(token);
 
-    await this.afAuth.auth.signInAndRetrieveDataWithCredential(credential);
+    const u = await this.afAuth.auth.signInAndRetrieveDataWithCredential(credential);
+
+    this.updateUserData(u.user);
+
+    this.router.navigate(['/']);
 
 
     // Alternative approach, use the Firebase login with scopes and make RESTful API calls
@@ -64,39 +85,55 @@ export class AuthService {
     this.afAuth.auth.signOut();
   }
 
-  async getCalendar() {
-    const events = await gapi.client.calendar.events.list({
-      calendarId: 'primary',
-      timeMin: new Date().toISOString(),
-      showDeleted: false,
-      singleEvents: true,
-      maxResults: 10,
-      orderBy: 'startTime'
-    })
+  // Sets user data to firestore after succesful login
+  private updateUserData(user: User) {
+    console.log("going to insert user, ", user);
+    const userRef: AngularFirestoreDocument<User> = this.afs.doc(
+      `users/${user.uid}`
+    );
 
-    console.log(events)
+    const data: User = {
+      uid: user.uid,
+      email: user.email || null,
+      displayName: user.displayName || 'nameless user',
+      photoURL: user.photoURL || 'https://goo.gl/Fz9nrQ'
+    };
+    return userRef.set(data);
+  }
 
-    this.calendarItems = events.result.items;
+  // async getCalendar() {
+  //   const events = await gapi.client.calendar.events.list({
+  //     calendarId: 'primary',
+  //     timeMin: new Date().toISOString(),
+  //     showDeleted: false,
+  //     singleEvents: true,
+  //     maxResults: 10,
+  //     orderBy: 'startTime'
+  //   })
+
+  //   console.log(events)
+
+  //   this.calendarItems = events.result.items;
   
-  }
+  // }
 
-  async insertEvent() {
-    const insert = await gapi.client.calendar.events.insert({
-      calendarId: 'primary',
-      start: {
-        dateTime: hoursFromNow(2),
-        timeZone: 'America/Los_Angeles'
-      }, 
-      end: {
-        dateTime: hoursFromNow(3),
-        timeZone: 'America/Los_Angeles'
-      }, 
-      summary: 'Have Fun!!!',
-      description: 'Do some cool stuff and have a fun time doing it'
-    })
+  // async insertEvent() {
+  //   const insert = await gapi.client.calendar.events.insert({
+  //     calendarId: 'primary',
+  //     start: {
+  //       dateTime: hoursFromNow(2),
+  //       timeZone: 'America/Los_Angeles'
+  //     }, 
+  //     end: {
+  //       dateTime: hoursFromNow(3),
+  //       timeZone: 'America/Los_Angeles'
+  //     }, 
+  //     summary: 'Have Fun!!!',
+  //     description: 'Do some cool stuff and have a fun time doing it'
+  //   })
 
-    await this.getCalendar();
-  }
+  //   await this.getCalendar();
+  // }
 
 
 }
