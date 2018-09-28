@@ -5,7 +5,7 @@ import { AddChorelistComponent } from './add-chorelist/add-chorelist.component';
 
 const routes: Routes = [
   {path: '', component: ChorelisthomeComponent},
-  {path: 'add', component: AddChorelistComponent}
+  {path: 'edit/:chorelistid', component: AddChorelistComponent}
 ];
 
 @NgModule({

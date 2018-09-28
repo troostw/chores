@@ -5,36 +5,33 @@
 
   <input type="hidden" placeholder="Owner" formControlName="owner">
 
-  <div formArrayName="chores">
-    <h3>Chores <button mat-icon-button color="warn" (click)="addChore()">
-        <mat-icon aria-label="add">add</mat-icon>
-      </button></h3>
+</form>
 
-    <div *ngFor="let ch of chorelistForm.get('chores').controls; let j=index">
-      <h4>CHORE {{j+1}}</h4>
-      <div [formGroupName]="j">
-        <mat-form-field>
-          <input matInput formControlName="chorelist" placeholder="List">
-        </mat-form-field>
 
-        <mat-form-field>
-          <input matInput formControlName="choreName" placeholder="Name">
-        </mat-form-field>
-
-        <mat-form-field>
-          <input type="number" matInput formControlName="choreWeight" placeholder="Weight">
-        </mat-form-field>
-
-        <!-- <button (click)="deleteProject(comp.controls.projects, j)">
-            Delete Project
-          </button> -->
+<form [formGroup]="listItemsForm">
+    <div formArrayName="chores">
+        <h3>Chores <button mat-icon-button color="warn" (click)="addChore()">
+            <mat-icon aria-label="add">add</mat-icon>
+          </button></h3>
+    
+        <div *ngFor="let ch of listItemsForm.get('chores').controls; let j=index">
+          <h4>CHORE {{j+1}}</h4>
+          <div [formGroupName]="j">
+            <mat-form-field>
+              <input matInput formControlName="chorelist" placeholder="List">
+            </mat-form-field>
+    
+            <mat-form-field>
+              <input matInput formControlName="choreName" placeholder="Name">
+            </mat-form-field>
+    
+            <mat-form-field>
+              <input type="number" matInput formControlName="choreWeight" placeholder="Weight">
+            </mat-form-field>
+          </div>
+        </div>
+    
       </div>
-    </div>
-
-  </div>
-
-
-  <button mat-raised-button color="accent" type="submit" [disabled]="!chorelistForm.valid">Submit</button>
 </form>
 
 

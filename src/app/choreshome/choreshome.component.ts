@@ -2,7 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { Breakpoints, BreakpointState, BreakpointObserver } from '@angular/cdk/layout';
 import { AngularFirestore, AngularFirestoreDocument, AngularFirestoreCollection } from '@angular/fire/firestore';
 import { AuthService } from '../auth.service';
-import { User, Chore } from '../models.service';
+import { User } from '../models.service';
+import { Chore, newChore } from '../models/chore';
 import { Observable } from 'rxjs';
 
 @Component({
@@ -43,10 +44,17 @@ export class ChoreshomeComponent implements OnInit{
 
   inspectMe() {
     console.log("Here");
-    this.assignedChoresObs.subscribe(cha => {
-      this.assignedChores = cha;
-      console.log('got an array ', cha);
-    });
+    // this.assignedChoresObs.subscribe(cha => {
+    //   this.assignedChores = cha;
+    //   console.log('got an array ', cha);
+    // });
+
+    let ch:Chore = newChore();
+    this.userDoc.collection<Chore>('assignedChores').add(ch)
+    .then(ref => {
+      console.log('ref: ', ref);
+      ch.choreid = ref.id;
+    })
   }
 
   
@@ -60,7 +68,7 @@ export class ChoreshomeComponent implements OnInit{
           this.assignedChores = cha;
           console.log('got an array ', cha);
         });
-        this.userDoc.collection<Chore>('assignedChores').add({choreName:"Wiebo", chorelist:"whatever", choreWeight:11})
+        
     });
   }
 

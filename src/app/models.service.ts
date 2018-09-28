@@ -9,13 +9,8 @@ export interface User {
   displayName?: string;
 }
 
-export interface Chore {
-  chorelist: string,
-  choreName: String,
-  choreWeight: Number
-}
-
 export interface Chorelist {
+  chorelistid: string,
   listName: string,
   owner: string,
   listImageUrl: string
