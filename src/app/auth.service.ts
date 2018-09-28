@@ -4,16 +4,10 @@ import { Router} from '@angular/router';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { AngularFirestore, AngularFirestoreDocument} from '@angular/fire/firestore';
 import { auth } from 'firebase/app';
-import { switchMap, take, map } from 'rxjs/operators';
+import { switchMap } from 'rxjs/operators';
+import { User } from './models.service';
 
 declare var gapi: any;
-
-interface User {
-  uid: string;
-  email?: string | null;
-  photoURL?: string;
-  displayName?: string;
-}
 
 @Injectable({
   providedIn: 'root'

@@ -1,15 +1,17 @@
-import { Component } from '@angular/core';
-import { map } from 'rxjs/operators';
+import { Component, OnInit } from '@angular/core';
 import { Breakpoints, BreakpointState, BreakpointObserver } from '@angular/cdk/layout';
+import { AngularFirestore, AngularFirestoreDocument, AngularFirestoreCollection } from '@angular/fire/firestore';
 import { AuthService } from '../auth.service';
+import { User, Chore } from '../models.service';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-choreshome',
   templateUrl: './choreshome.component.html',
   styleUrls: ['./choreshome.component.css']
 })
-export class ChoreshomeComponent {
-  /** Based on the screen size, switch from standard to one column per row */
+export class ChoreshomeComponent implements OnInit{
+  /** Based on the screen size, switch from standard to one column per row 
   cards = this.breakpointObserver.observe(Breakpoints.Handset).pipe(
     map(({ matches }) => {
       if (matches) {
@@ -29,6 +31,37 @@ export class ChoreshomeComponent {
       ];
     })
   );
+  */
 
-  constructor(private breakpointObserver: BreakpointObserver, private auth: AuthService) {}
+  userDoc: AngularFirestoreDocument<User>;
+  assignedChoresObs: Observable<Chore[]>;
+  assignedChores: Chore[];
+
+  constructor(private breakpointObserver: BreakpointObserver, private afs: AngularFirestore, private auth: AuthService ) {
+    
+  }
+
+  inspectMe() {
+    console.log("Here");
+    this.assignedChoresObs.subscribe(cha => {
+      this.assignedChores = cha;
+      console.log('got an array ', cha);
+    });
+  }
+
+  
+
+  ngOnInit() {
+    this.auth.user.subscribe(user => {
+        console.log(`fetching user/${user.uid}` );
+        this.userDoc = this.afs.doc<User>(`users/${user.uid}`);
+        this.assignedChoresObs = this.userDoc.collection<Chore>('assignedChores').valueChanges();
+        this.assignedChoresObs.subscribe(cha => {
+          this.assignedChores = cha;
+          console.log('got an array ', cha);
+        });
+        this.userDoc.collection<Chore>('assignedChores').add({choreName:"Wiebo", chorelist:"whatever", choreWeight:11})
+    });
+  }
+
 }

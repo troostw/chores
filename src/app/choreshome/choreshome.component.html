@@ -1,11 +1,12 @@
 <div class="grid-container">
-  <h1 class="mat-h1">Dashboard</h1>
+  <h1 class="mat-h1">My chores </h1>
+  <p><button (click)="inspectMe()">Boo</button></p>
   <mat-grid-list cols="2" rowHeight="350px">
-    <mat-grid-tile *ngFor="let card of cards | async" [colspan]="card.cols" [rowspan]="card.rows">
+    <mat-grid-tile *ngFor="let chore of assignedChoresObs | async" [colspan]="1" [rowspan]="1">
       <mat-card class="dashboard-card">
         <mat-card-header>
-          <mat-card-title>
-            {{card.title}}
+          <mat-card-title >
+            {{chore.choreName}} 
             <button mat-icon-button class="more-button" [matMenuTriggerFor]="menu" aria-label="Toggle menu">
               <mat-icon>more_vert</mat-icon>
             </button>
@@ -16,7 +17,7 @@
           </mat-card-title>
         </mat-card-header>
         <mat-card-content class="dashboard-card-content">
-          <div>Card Content Here</div>
+          <div>Chore Content Here</div>
         </mat-card-content>
       </mat-card>
     </mat-grid-tile>

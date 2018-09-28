@@ -12,6 +12,11 @@ const routes: Routes = [
     loadChildren: './chore-edit/chore-edit.module#ChoreEditModule',
     canActivate: [AuthGuard]
   },
+  {
+    path: 'chorelist',
+    loadChildren: './chorelist/chorelist.module#ChorelistModule',
+    canActivate: [AuthGuard]
+  },
 ];
 
 @NgModule({
