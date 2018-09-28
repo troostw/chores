@@ -3,6 +3,7 @@ import { AngularFirestore, AngularFirestoreDocument, AngularFirestoreCollection 
 import { AuthService } from '../../auth.service';
 import { User, Chorelist } from '../../models.service'
 import { Router } from '@angular/router';
+import { tap } from 'rxjs/operators';
 
 
 @Component({
@@ -13,14 +14,27 @@ import { Router } from '@angular/router';
 export class ChorelisthomeComponent implements OnInit {
 
   user: User;
+  chlCollection: AngularFirestoreCollection<Chorelist>;
+  chorelists: Array<Chorelist>;
 
   constructor(private afs: AngularFirestore,
     private auth: AuthService
     , private router: Router) { }
 
   ngOnInit() {
+    
     this.auth.user.subscribe(user => {
       this.user = user;
+      console.log(`fetching chorelist for user/${user.uid}`);
+      this.chlCollection = this.afs.collection<Chorelist>(`users/${user.uid}/chorelists`);
+
+      this.chlCollection.valueChanges().pipe(
+        tap(data => {
+          this.chorelists = data;
+        })
+      )
+      .subscribe()
+
     });
   }
 

@@ -95,8 +95,6 @@ export class AddChorelistComponent implements OnInit {
   
       this.choresForms.push(fg);
     })
-
-    
   }
 
   saveChore(ch: Chore){
