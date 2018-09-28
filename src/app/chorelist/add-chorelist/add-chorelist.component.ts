@@ -6,8 +6,8 @@ import { ActivatedRoute } from '@angular/router';
 import { AngularFirestore, AngularFirestoreDocument, AngularFirestoreCollection } from '@angular/fire/firestore';
 import { AuthService } from '../../auth.service';
 import { debounceTime, tap } from 'rxjs/operators';
-import { Chorelist } from '../../models.service';
-import { Chore } from '../../models/chore';
+import { Chorelist, User } from '../../models.service';
+import { Chore, newChore } from '../../models/chore';
 
 
 @Component({
@@ -16,16 +16,17 @@ import { Chore } from '../../models/chore';
   styleUrls: ['./add-chorelist.component.css']
 })
 export class AddChorelistComponent implements OnInit {
-
+  user: User;
   chorelistForm: FormGroup;
-  listItemsForm: FormGroup;
+  // listItemsForm: FormGroup;
+  choresForms: Array<FormGroup>;
   chorelistid: string;
   chlDocument: AngularFirestoreDocument<Chorelist> ;
   choresCollection: AngularFirestoreCollection<Chore>;
 
-  get chores() {
-    return this.listItemsForm.get('chores') as FormArray;
-  }
+  // get chores() {
+  //   return this.listItemsForm.get('chores') as FormArray;
+  // }
 
   constructor(private fb: FormBuilder,
     private afs: AngularFirestore,
@@ -40,13 +41,15 @@ export class AddChorelistComponent implements OnInit {
       owner: ['']
     });
 
-    this.listItemsForm = this.fb.group({
-      chores: this.fb.array([])
-    });
+    // this.listItemsForm = this.fb.group({
+    //   chores: this.fb.array([])
+    // });
+    this.choresForms = [];
 
     this.chorelistid = this.route.snapshot.paramMap.get('chorelistid');
 
     this.auth.user.subscribe(user => {
+      this.user = user;
       console.log(`fetching chorelist for user/${user.uid}`);
       this.chlDocument = this.afs.doc<Chorelist>(`users/${user.uid}/chorelists/${this.chorelistid}`);
       this.choresCollection = this.afs.collection<Chore>(`users/${user.uid}/chorelists/${this.chorelistid}/chores`)
@@ -69,13 +72,35 @@ export class AddChorelistComponent implements OnInit {
   }
 
   addChore() {
-    this.chores.push(
-      this.fb.group({
-        chorelist: [''],
+
+    let ch:Chore = newChore();
+    ch.chorelist = this.chorelistid;
+    ch.choreWeight = 10;
+    this.chlDocument.collection<Chore>('chores').add(ch)
+    .then(ref => {
+      ch.choreid = ref.id;
+      const fg = this.fb.group({
+        choreid: [ch.choreid],
+        chorelist: [ch.chorelist],
         choreName: ['', Validators.required],
-        choreWeight: ['']
-      })
-    );
+        choreWeight: [10]
+      });
+  
+      fg.valueChanges.pipe(
+        debounceTime(1000)
+      ).subscribe(formValue => {
+        console.log("new chore form values ", formValue);
+        this.saveChore(formValue);
+      });
+  
+      this.choresForms.push(fg);
+    })
+
+    
+  }
+
+  saveChore(ch: Chore){
+    this.afs.doc<Chore>(`users/${this.user.uid}/chorelists/${this.chorelistid}/chores/${ch.choreid}`).set(ch);
   }
 
 }
