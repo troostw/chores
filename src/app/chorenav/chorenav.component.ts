@@ -27,7 +27,7 @@ export class ChorenavComponent {
     );
 
   constructor(private breakpointObserver: BreakpointObserver,
-    private auth: AuthService, private router: Router, private location: Location) {
+    public auth: AuthService, private router: Router, private location: Location) {
 
   }
 
