@@ -16,16 +16,23 @@
   </mat-sidenav>
   <mat-sidenav-content>
     <mat-toolbar color="primary">
-      <button
-        type="button"
-        aria-label="Toggle sidenav"
-        mat-icon-button
-        (click)="drawer.toggle()"
-        *ngIf="isHandset$ | async">
-        <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
-      </button>
+      <span *ngIf="isHandset$ | async">
+          <button
+          type="button"
+          aria-label="Toggle sidenav"
+          mat-icon-button
+          (click)="drawer.toggle()"
+          *ngIf="onRoot">
+          <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
+        </button>
+        <button (click)="goBack()" mat-icon-button type="button"
+                 *ngIf="!onRoot"><mat-icon aria-label="Side nav toggle icon">arrow_back</mat-icon>
+        </button>
+      </span>
+      
+      
       <span>chores</span>
-      <span flex></span>
+      <span class="fill-remaining-space"></span>
       <span *ngIf="auth.user | async as user">
         <p>{{ user.displayName }} <img src="{{ user.photoURL }}" width="30px"></p>
       </span>

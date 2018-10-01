@@ -3,6 +3,8 @@ import { BreakpointObserver, Breakpoints, BreakpointState } from '@angular/cdk/l
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { AuthService } from '../auth.service';
+import { UrlSegment, Router } from '@angular/router';
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-chorenav',
@@ -11,11 +13,26 @@ import { AuthService } from '../auth.service';
 })
 export class ChorenavComponent {
 
+  currentUrl: Array<UrlSegment>;
+
+  get onRoot():boolean {
+
+    return (this.router.routerState.snapshot.url === '/');
+
+  }
+
   isHandset$: Observable<boolean> = this.breakpointObserver.observe(Breakpoints.Handset)
     .pipe(
       map(result => result.matches)
     );
-    
-  constructor(private breakpointObserver: BreakpointObserver, private auth: AuthService) {}
-  
+
+  constructor(private breakpointObserver: BreakpointObserver,
+    private auth: AuthService, private router: Router, private location: Location) {
+
   }
+
+  goBack(){
+    this.location.back();
+  }
+
+}
