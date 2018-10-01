@@ -22,4 +22,10 @@ export class LoginComponent implements OnInit {
     this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
   }
 
+  doLogin(){
+    this.authsvc.login()
+  }
+  doLogout(){
+    this.authsvc.logout()
+  }
 }
