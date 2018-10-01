@@ -1,11 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
-import { Validators } from '@angular/forms';
-import { FormArray } from '@angular/forms';
+import { AngularFirestore, AngularFirestoreCollection, 
+  AngularFirestoreDocument } from '@angular/fire/firestore';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
-import { AngularFirestore, AngularFirestoreDocument, AngularFirestoreCollection } from '@angular/fire/firestore';
+import { debounceTime, take, tap } from 'rxjs/operators';
 import { AuthService } from '../../auth.service';
-import { debounceTime, tap } from 'rxjs/operators';
 import { Chorelist, User } from '../../models.service';
 import { Chore, newChore } from '../../models/chore';
 
@@ -35,18 +34,19 @@ export class AddChorelistComponent implements OnInit {
 
   }
 
+  
   ngOnInit() {
+    this.chorelistid = this.route.snapshot.paramMap.get('chorelistid');
     this.chorelistForm = this.fb.group({
       listName: ['', Validators.required],
-      owner: ['']
+      owner: [''],
+      chorelistid: [this.chorelistid]
     });
 
     // this.listItemsForm = this.fb.group({
     //   chores: this.fb.array([])
     // });
     this.choresForms = [];
-
-    this.chorelistid = this.route.snapshot.paramMap.get('chorelistid');
 
     this.auth.user.subscribe(user => {
       this.user = user;
@@ -56,10 +56,21 @@ export class AddChorelistComponent implements OnInit {
 
       this.chlDocument.valueChanges().pipe(
         tap(data => {
+          data.chorelistid = this.chorelistid;
           this.chorelistForm.patchValue(data)
         })
       )
-      .subscribe()
+      .subscribe();
+
+      this.choresCollection.snapshotChanges().pipe(take(1)).subscribe(actions => {
+        console.log("here");
+        actions.map(dca_a => {
+          console.log("there");
+          const ch:any = dca_a.payload.doc.data();
+          this.addFormForChore(ch);
+        })
+      });
+      
 
     });
 
@@ -71,6 +82,24 @@ export class AddChorelistComponent implements OnInit {
     });
   }
 
+  addFormForChore(ch: Chore){
+    const fg = this.fb.group({
+      choreid: [ch.choreid],
+      chorelist: [ch.chorelist],
+      choreName: [ch.choreName, Validators.required],
+      choreWeight: [ch.choreWeight]
+    });
+
+    fg.valueChanges.pipe(
+      debounceTime(1000)
+    ).subscribe(formValue => {
+      console.log("new chore form values ", formValue);
+      this.saveChore(formValue);
+    });
+
+    this.choresForms.push(fg);
+  }
+
   addChore() {
 
     let ch:Chore = newChore();
@@ -79,21 +108,24 @@ export class AddChorelistComponent implements OnInit {
     this.chlDocument.collection<Chore>('chores').add(ch)
     .then(ref => {
       ch.choreid = ref.id;
-      const fg = this.fb.group({
-        choreid: [ch.choreid],
-        chorelist: [ch.chorelist],
-        choreName: ['', Validators.required],
-        choreWeight: [10]
-      });
+      ch.choreName = '';
+      ch.choreWeight = 10;
+      this.addFormForChore(ch);
+      // const fg = this.fb.group({
+      //   choreid: [ch.choreid],
+      //   chorelist: [ch.chorelist],
+      //   choreName: ['', Validators.required],
+      //   choreWeight: [10]
+      // });
   
-      fg.valueChanges.pipe(
-        debounceTime(1000)
-      ).subscribe(formValue => {
-        console.log("new chore form values ", formValue);
-        this.saveChore(formValue);
-      });
+      // fg.valueChanges.pipe(
+      //   debounceTime(1000)
+      // ).subscribe(formValue => {
+      //   console.log("new chore form values ", formValue);
+      //   this.saveChore(formValue);
+      // });
   
-      this.choresForms.push(fg);
+      // this.choresForms.push(fg);
     })
   }
 

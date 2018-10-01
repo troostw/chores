@@ -38,13 +38,20 @@ export class ChorelisthomeComponent implements OnInit {
     });
   }
 
+  editChore(id){
+    console.log('navigating to:', id);
+    this.router.navigate(['chorelist','edit',id]);
+  }
+
   addList(){
     console.log('here we go then');
     const userDoc = this.afs.doc<User>(`users/${this.user.uid}`);
     console.log("here", this.user.displayName);
     let chl:Chorelist = {chorelistid:'', listName:'', owner:this.user.displayName, listImageUrl:''};
+    
     userDoc.collection<Chorelist>('chorelists').add(chl)
     .then(ref => {
+      chl.chorelistid = ref.id;
       this.router.navigate(['chorelist','edit',ref.id]);
     })
     

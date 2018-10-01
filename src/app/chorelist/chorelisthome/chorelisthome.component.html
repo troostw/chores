@@ -1,9 +1,7 @@
-<p>
-  All the lists
-</p>
-<!--  -->
+
 <div class="grid-container">
-    <mat-grid-list cols="2" rowHeight="350px">
+    <h1 class="mat-h1">My chore lists </h1>
+    <mat-grid-list cols="2" rowHeight="150px">
         <mat-grid-tile *ngFor="let chorelist of chorelists " [colspan]="1" [rowspan]="1">
           <mat-card class="dashboard-card">
             <mat-card-header>
@@ -13,7 +11,7 @@
                   <mat-icon>more_vert</mat-icon>
                 </button>
                 <mat-menu #menu="matMenu" xPosition="before">
-                  <button mat-menu-item>Expand</button>
+                  <button mat-menu-item (click)="editChore(chorelist.chorelistid)">Edit</button>
                   <button mat-menu-item>Remove</button>
                 </mat-menu>
               </mat-card-title>

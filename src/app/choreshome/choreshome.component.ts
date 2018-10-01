@@ -42,23 +42,6 @@ export class ChoreshomeComponent implements OnInit{
     
   }
 
-  inspectMe() {
-    console.log("Here");
-    // this.assignedChoresObs.subscribe(cha => {
-    //   this.assignedChores = cha;
-    //   console.log('got an array ', cha);
-    // });
-
-    let ch:Chore = newChore();
-    this.userDoc.collection<Chore>('assignedChores').add(ch)
-    .then(ref => {
-      console.log('ref: ', ref);
-      ch.choreid = ref.id;
-    })
-  }
-
-  
-
   ngOnInit() {
     this.auth.user.subscribe(user => {
         console.log(`fetching user/${user.uid}` );

@@ -1,6 +1,5 @@
 <div class="grid-container">
   <h1 class="mat-h1">My chores </h1>
-  <p><button (click)="inspectMe()">Boo</button></p>
   <mat-grid-list cols="2" rowHeight="350px">
     <mat-grid-tile *ngFor="let chore of assignedChoresObs | async" [colspan]="1" [rowspan]="1">
       <mat-card class="dashboard-card">

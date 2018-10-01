@@ -4,6 +4,7 @@
   </mat-form-field>
 
   <input type="hidden" placeholder="Owner" formControlName="owner">
+  <input type="hidden" placeholder="chorelistid" formControlName="chorelistid">
 
 </form>
 
@@ -36,7 +37,7 @@
 </form> -->
 <div *ngFor="let ch of choresForms">
   <form [formGroup]="ch">
-    <input type="hidden" formControlName="choreid">
+    <input type="hidden" formControlName="choreid" >
     <input type="hidden" formControlName="chorelist" placeholder="List">
 
         <mat-form-field>
@@ -49,9 +50,3 @@
   </form>
 
 </div>
-
-
-
-<p>
-  Form Value: {{ chorelistForm.value | json }}
-</p>
