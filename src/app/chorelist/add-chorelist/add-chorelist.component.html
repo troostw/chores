@@ -5,8 +5,15 @@
 
   <input type="hidden" placeholder="Owner" formControlName="owner">
   <input type="hidden" placeholder="chorelistid" formControlName="chorelistid">
+  <div>
+    <input #fileInput type="file" accept="image/*" capture (change)="handleNewImageFile($event)" style="display: none">
+    <button mat-raised-button color="primary" (click)="fileInput.click()">Change Image</button>
+  </div>
+  <input id="imageFile" type="hidden" placeholder="listImageUrl" formControlName="listImageUrl">
+
 
 </form>
+<img width="150px" [src]="listImageUrl" />
 
 <h3>Chores
   <button mat-icon-button color="warn" (click)="addChore()">
@@ -14,39 +21,19 @@
   </button>
 </h3>
 
-<!-- <form [formGroup]="listItemsForm">
-  <div formArrayName="chores">
-    <div *ngFor="let ch of listItemsForm.get('chores').controls; let j=index">
-      <h4>CHORE {{j+1}}</h4>
-      <div [formGroupName]="j">
-        <mat-form-field>
-          <input matInput formControlName="chorelist" placeholder="List">
-        </mat-form-field>
 
-        <mat-form-field>
-          <input matInput formControlName="choreName" placeholder="Name">
-        </mat-form-field>
-
-        <mat-form-field>
-          <input type="number" matInput formControlName="choreWeight" placeholder="Weight">
-        </mat-form-field>
-      </div>
-    </div>
-
-  </div>
-</form> -->
 <div *ngFor="let ch of choresForms">
   <form [formGroup]="ch">
-    <input type="hidden" formControlName="choreid" >
+    <input type="hidden" formControlName="choreid">
     <input type="hidden" formControlName="chorelist" placeholder="List">
 
-        <mat-form-field>
-          <input matInput formControlName="choreName" placeholder="Name">
-        </mat-form-field>
+    <mat-form-field>
+      <input matInput formControlName="choreName" placeholder="Name">
+    </mat-form-field>
 
-        <mat-form-field>
-          <input type="number" matInput formControlName="choreWeight" placeholder="Weight">
-        </mat-form-field>
+    <mat-form-field>
+      <input type="number" matInput formControlName="choreWeight" placeholder="Weight">
+    </mat-form-field>
   </form>
 
 </div>
