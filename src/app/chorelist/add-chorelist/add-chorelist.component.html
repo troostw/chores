@@ -6,7 +6,7 @@
   <input type="hidden" placeholder="Owner" formControlName="owner">
   <input type="hidden" placeholder="chorelistid" formControlName="chorelistid">
   <div>
-    <input #fileInput type="file" accept="image/*" capture (change)="handleNewImageFile($event)" style="display: none">
+    <input #fileInput type="file" accept="image/*" (change)="handleNewImageFile($event)" style="display: none">
     <button mat-raised-button color="primary" (click)="fileInput.click()">Change Image</button>
   </div>
   <input id="imageFile" type="hidden" placeholder="listImageUrl" formControlName="listImageUrl">
