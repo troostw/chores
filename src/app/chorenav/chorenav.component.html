@@ -2,7 +2,7 @@
   <mat-sidenav
     #drawer
     class="sidenav"
-    fixedInViewport="true"
+    fixedInViewport="false"
     [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'"
     [mode]="(isHandset$ | async) ? 'over' : 'side'"
     [opened]="!(isHandset$ | async)">
@@ -36,6 +36,6 @@
         <p>{{ user.displayName }} <img src="{{ user.photoURL }}" width="30px"></p>
       </span>
     </mat-toolbar>
-    <router-outlet></router-outlet>
+    <ng-content></ng-content>
   </mat-sidenav-content>
 </mat-sidenav-container>
