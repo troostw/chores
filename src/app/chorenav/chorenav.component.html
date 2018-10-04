@@ -4,8 +4,8 @@
     class="sidenav"
     fixedInViewport="false"
     [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'"
-    [mode]="(isHandset$ | async) ? 'over' : 'side'"
-    [opened]="!(isHandset$ | async)">
+    [mode]="'over'"
+    [opened]="false">
     <mat-toolbar color="primary">Menu
     </mat-toolbar>
     <mat-nav-list>
@@ -16,7 +16,7 @@
   </mat-sidenav>
   <mat-sidenav-content>
     <mat-toolbar color="primary">
-      <span *ngIf="isHandset$ | async">
+      <span>
           <button
           type="button"
           aria-label="Toggle sidenav"

@@ -21,8 +21,3 @@
   flex: 1 1 auto;
 }
 
-@media (min-width: 599px){
-  .sidenav{
-    display: none;
-  }
-}
