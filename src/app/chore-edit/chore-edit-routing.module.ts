@@ -3,7 +3,7 @@ import { Routes, RouterModule } from '@angular/router';
 import { EditchoreComponent } from './editchore/editchore.component';
 
 const routes: Routes = [
-  {path: '', component: EditchoreComponent}
+  {path: ':id', component: EditchoreComponent}
 ];
 
 @NgModule({

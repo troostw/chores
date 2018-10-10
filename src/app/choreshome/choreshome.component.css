@@ -19,3 +19,13 @@
 .dashboard-card-content {
   text-align: center;
 }
+
+.button-bottom-right {
+  /* This fills the remaining space, by using flexbox. 
+     Every toolbar row uses a flexbox row layout. */
+     top: auto !important;
+     right: 20px !important;
+     bottom: 10px !important;
+     left: auto !important;
+     position: fixed !important;
+}

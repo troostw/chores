@@ -1,11 +1,11 @@
 <div class="grid-container">
   <h1 class="mat-h1">My chores </h1>
   <mat-grid-list cols="2" rowHeight="350px">
-    <mat-grid-tile *ngFor="let chore of assignedChoresObs | async" [colspan]="1" [rowspan]="1">
+    <mat-grid-tile *ngFor="let chore of choresObs | async" [colspan]="1" [rowspan]="1">
       <mat-card class="dashboard-card">
         <mat-card-header>
           <mat-card-title >
-            {{chore.choreName}} 
+            <h3><a routerLink="choreedit/{{chore.choreid}}">{{chore.choreName}}</a></h3> 
             <button mat-icon-button class="more-button" [matMenuTriggerFor]="menu" aria-label="Toggle menu">
               <mat-icon>more_vert</mat-icon>
             </button>
@@ -16,9 +16,39 @@
           </mat-card-title>
         </mat-card-header>
         <mat-card-content class="dashboard-card-content">
-          <div>Chore Content Here</div>
+          <div><img [src]="chore.choreImageUrl" width=50px ></div>
+          <div>As Of: {{chore.startDate.toDate() | date:'MMM dd'}}</div>
+        </mat-card-content>
+      </mat-card>
+    </mat-grid-tile>
+  </mat-grid-list>
+  <h1 class="mat-h1">Assigned To </h1>
+  <mat-grid-list cols="2" rowHeight="350px">
+    <mat-grid-tile *ngFor="let choreInstance of choreInstancesObs | async" [colspan]="1" [rowspan]="1">
+      <mat-card class="dashboard-card">
+        <mat-card-header>
+          <mat-card-title >
+            <h3><a routerLink="choreInstanceEdit/{{choreInstance.choreInstanceId}}">{{choreInstance.choreDate}}</a></h3> 
+            <button mat-icon-button class="more-button" [matMenuTriggerFor]="menu" aria-label="Toggle menu">
+              <mat-icon>more_vert</mat-icon>
+            </button>
+            <mat-menu #menu="matMenu" xPosition="before">
+              <button mat-menu-item>Expand</button>
+              <button mat-menu-item>Remove</button>
+            </mat-menu>
+          </mat-card-title>
+        </mat-card-header>
+        <mat-card-content class="dashboard-card-content">
+          <div><img [src]="choreInstance.choreImageUrl" width=50px ></div>
+          <div>As Of: {{choreInstance.choreDate.toDate() | date:'MMM dd'}}</div>
         </mat-card-content>
       </mat-card>
     </mat-grid-tile>
   </mat-grid-list>
 </div>
+<button class="button-bottom-right" mat-fab mat-fab-bottom-right (click)="addChore()" aria-label="Add a chorelist">
+  <mat-icon>add</mat-icon>
+</button>
+<button class="button-bottom-right" mat-fab mat-fab-bottom-right (click)="sendVerifyEmail()" aria-label="Add a chorelist">
+    <mat-icon>back</mat-icon>
+  </button>

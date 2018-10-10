@@ -1,3 +1,39 @@
-<p>
-  editchore works!
-</p>
+<div class="app-editchore">
+  <form [formGroup]="choreForm">
+    <input type="hidden" placeholder="Owner" formControlName="owner">
+    <input type="hidden" placeholder="choreid" formControlName="choreid">
+    <mat-form-field class="example-full-width">
+      <input matInput placeholder="Chore" value="" formControlName="choreName" required>
+    </mat-form-field>
+    <h3>Chore Image</h3>
+    <div  class="imageContainer">
+      <img *ngIf="choreImageUrl" width="150px" [src]="choreImageUrl" />
+      <span *ngIf="!choreImageUrl" width="150px">Choose an image ...</span>
+      <div>
+          <input #fileInput type="file" accept="image/*" (change)="handleNewImageFile($event)" style="display: none">
+          <button id="changeImageButton" mat-raised-button color="primary" (click)="fileInput.click()">Change Image</button>
+        </div>
+    </div>
+    
+    <mat-form-field>
+      <mat-select placeholder="Repeats" formControlName="repeatType">
+        <mat-option *ngFor="let repeat of repeatTypes" [value]="repeat">
+          {{repeat}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <input id="imageFile" type="hidden" placeholder="choreImageUrl" formControlName="choreImageUrl">
+
+    
+    <mat-form-field>
+      <input matInput [matDatepicker]="picker" placeholder="Start Date" formControlName="startDate">
+      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+      <mat-datepicker #picker></mat-datepicker>
+    </mat-form-field>
+
+  </form>
+
+
+</div>
+<button mat-raised-button class="button-bottom-right" color="primary" (click)="save()">Save Chore</button>

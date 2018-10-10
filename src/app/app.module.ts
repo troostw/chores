@@ -15,6 +15,7 @@ import { LayoutModule } from '@angular/cdk/layout';
 import { MatToolbarModule, MatButtonModule, MatSidenavModule, MatIconModule, MatListModule, MatGridListModule, MatCardModule, MatMenuModule } from '@angular/material';
 import { ChoreshomeComponent } from './choreshome/choreshome.component';
 import { LoginComponent } from './login/login.component';
+import { HttpClientModule } from '@angular/common/http';
 
 // Add your project credentials
 // Then use it in the imports section below
@@ -43,6 +44,7 @@ const yourFirebaseConfig = {
     AngularFireAuthModule, 
     AngularFirestoreModule,
     AngularFireStorageModule,
+    HttpClientModule,
     LayoutModule,
     MatToolbarModule,
     MatButtonModule,
