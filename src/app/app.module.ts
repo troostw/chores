@@ -12,10 +12,12 @@ import { AngularFireStorageModule } from '@angular/fire/storage';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ChorenavComponent } from './chorenav/chorenav.component';
 import { LayoutModule } from '@angular/cdk/layout';
-import { MatToolbarModule, MatButtonModule, MatSidenavModule, MatIconModule, MatListModule, MatGridListModule, MatCardModule, MatMenuModule } from '@angular/material';
+import { MatToolbarModule, MatButtonModule, MatSidenavModule, MatIconModule, MatListModule, MatGridListModule, MatCardModule, MatMenuModule, MatCheckboxModule, MatSelectModule, MatDialogModule } from '@angular/material';
 import { ChoreshomeComponent } from './choreshome/choreshome.component';
 import { LoginComponent } from './login/login.component';
 import { HttpClientModule } from '@angular/common/http';
+import { InviteComponent } from './invite/invite.component';
+import { ReactiveFormsModule } from '@angular/forms';
 
 // Add your project credentials
 // Then use it in the imports section below
@@ -33,7 +35,8 @@ const yourFirebaseConfig = {
     AppComponent,
     ChorenavComponent,
     ChoreshomeComponent,
-    LoginComponent
+    LoginComponent,
+    InviteComponent
   ],
   imports: [
     BrowserModule,
@@ -53,9 +56,14 @@ const yourFirebaseConfig = {
     MatListModule,
     MatGridListModule,
     MatCardModule,
-    MatMenuModule
+    MatMenuModule,
+    MatCheckboxModule,
+    MatSelectModule,
+    MatDialogModule,
+    ReactiveFormsModule
   ],
   providers: [],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
+  entryComponents: [InviteComponent],
 })
 export class AppModule { }

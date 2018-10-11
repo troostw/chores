@@ -15,6 +15,7 @@ export interface ChoreInstance {
     assignedTo: string;
     completed: boolean;
     choreImageUrl: string;
+    selected: boolean;
 }
 
 export function newChore():Chore{

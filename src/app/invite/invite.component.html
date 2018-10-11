@@ -1,0 +1,16 @@
+<div class="app-invite">
+  <h2 mat-dialog-title>Invite by email</h2>
+  <mat-dialog-content>
+    <form [formGroup]="inviteForm">
+      <input placeholder="Email Address" value="" formControlName="email" required>
+    </form>
+  </mat-dialog-content>
+
+  <mat-dialog-actions>
+    <button mat-button (click)="doInvite()">Invite</button>
+    <!-- The mat-dialog-close directive optionally accepts a value as a result for the dialog. -->
+    <button mat-button (click)="doCancel()">Cancel</button>
+    <!-- <button mat-raised-button color="primary" (click)="doInvite()">Invite</button>
+    <button mat-raised-button color="primary" (click)="doCancel()">Cancel</button> -->
+  </mat-dialog-actions>
+</div>
