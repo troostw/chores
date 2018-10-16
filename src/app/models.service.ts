@@ -9,13 +9,6 @@ export interface User {
   displayName?: string;
 }
 
-export interface Chorelist {
-  chorelistid: string,
-  listName: string,
-  owner: string,
-  listImageUrl: string
-}
-
 @Injectable({
   providedIn: 'root'
 })

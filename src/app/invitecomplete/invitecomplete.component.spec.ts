@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ChorelisthomeComponent } from './chorelisthome.component';
+import { InvitecompleteComponent } from './invitecomplete.component';
 
-describe('ChorelisthomeComponent', () => {
-  let component: ChorelisthomeComponent;
-  let fixture: ComponentFixture<ChorelisthomeComponent>;
+describe('InvitecompleteComponent', () => {
+  let component: InvitecompleteComponent;
+  let fixture: ComponentFixture<InvitecompleteComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ ChorelisthomeComponent ]
+      declarations: [ InvitecompleteComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(ChorelisthomeComponent);
+    fixture = TestBed.createComponent(InvitecompleteComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

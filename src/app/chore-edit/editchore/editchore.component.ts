@@ -10,6 +10,7 @@ import {
 } from '@angular/fire/firestore';
 import { AngularFireStorage } from '@angular/fire/storage';
 import { Chore } from '../../models/chore';
+import { Group } from '../../models/group';
 
 
 @Component({
@@ -20,28 +21,35 @@ import { Chore } from '../../models/chore';
 export class EditchoreComponent implements OnInit {
 
   private choreid: string;
+  private groupid: string;
   public choreForm: FormGroup;
   private choreDoc: AngularFirestoreDocument<Chore>;
   private user: User;
   public repeatTypes: Array<string>;
   public choreImageUrl: string;
+  public groups: Array<Group>;
 
-  constructor(private route: ActivatedRoute, 
+  constructor(private route: ActivatedRoute,
     private router: Router,
-    private fb: FormBuilder, 
+    private fb: FormBuilder,
     private auth: AuthService,
     private afs: AngularFirestore,
-    private storage: AngularFireStorage) { 
-    this.repeatTypes = ['None','Daily','Weekdays','Weekends','Manual'];
+    private storage: AngularFireStorage) {
+    this.repeatTypes = ['None', 'Daily', 'Weekdays', 'Weekends', 'Manual'];
+
   }
 
   ngOnInit() {
     this.choreid = this.route.snapshot.paramMap.get('id');
+    if (this.choreid != 'new'){
+      this.groupid = this.route.snapshot.paramMap.get('groupid');
+    }
     
+
     this.choreForm = this.fb.group({
       choreid: [''],
+      groupid:[''],
       choreName: ['', Validators.required],
-      owner: [''],
       choreImageUrl: [],
       startDate: [''],
       repeatType: ['none']
@@ -50,18 +58,26 @@ export class EditchoreComponent implements OnInit {
 
     this.auth.user.subscribe(user => {
       this.user = user;
-      console.log(`fetching chorelist for user/${user.uid}`);
-      if (this.choreid == 'new'){
-        // // this.afs.doc<Chore>(`users/${this.user.uid}/chorelists/${this.chorelistid}/chores/${ch.choreid}`).set(ch);
-        // let choresCollection = this.afs.collection(`users/${this.user.uid}/chores`);
-        // this.choreDoc = choresCollection.doc('chore');
+      //going to get the groups that this user has
+      const groups = this.afs.collection<Group>('groups', ref => ref.where('memberslist', 'array-contains', user.uid)).snapshotChanges()
+        .pipe(map(actions =>
+          actions.map(a => {
+            const data = a.payload.doc.data() as Group;
+            const id = a.payload.doc.id;
+            return { id, ...data };
+          }))
+        );
+      groups.subscribe(grps =>{
+        this.groups = grps;
+      })  
+
+      if (this.choreid == 'new') {
         this.choreid = this.afs.createId();
         console.log('this.choreid', this.choreid);
         this.choreForm.get('choreid').setValue(this.choreid);
-        this.choreForm.get('owner').setValue(this.user.uid);
       } else {
         //we're going to fetch the data and populate the form
-        this.afs.doc<Chore>(`users/${this.user.uid}/chores/${this.choreid}`).valueChanges()
+        this.afs.doc<Chore>(`groups/${this.groupid}/chores/${this.choreid}`).valueChanges()
         .pipe(map((doc: any) => {
           if (doc.startDate && doc.startDate.toDate){
             doc.startDate = doc.startDate.toDate();
@@ -77,7 +93,7 @@ export class EditchoreComponent implements OnInit {
       debounceTime(1000)
     ).subscribe(formValue => {
       console.log("new form values ", formValue);
-      
+
     });
   }
 
@@ -94,16 +110,14 @@ export class EditchoreComponent implements OnInit {
     });
   }
 
-  save(){
+  save() {
     let ch = this.choreForm.value;
     console.log("Trying to save this: ", ch);
-    this.afs.doc<Chore>(`users/${this.user.uid}/chores/${this.choreid}`).set(ch).then(
+    this.afs.doc<Chore>(`groups/${ch.groupid}/chores/${this.choreid}`).set(ch).then(
       () => {
         this.router.navigate(['/']);
       }
     );
   }
-
-
 
 }

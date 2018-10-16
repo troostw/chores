@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
-import { Router} from '@angular/router';
+import { Router } from '@angular/router';
 import { AngularFireAuth } from '@angular/fire/auth';
-import { AngularFirestore, AngularFirestoreDocument} from '@angular/fire/firestore';
+import { AngularFirestore, AngularFirestoreDocument } from '@angular/fire/firestore';
 import { auth } from 'firebase/app';
 import { switchMap } from 'rxjs/operators';
 import { User } from './models.service';
@@ -13,11 +13,11 @@ declare var gapi: any;
   providedIn: 'root'
 })
 export class AuthService {
-  
+
   user: Observable<User | null>;
   calendarItems: any[];
 
-  constructor(public afAuth: AngularFireAuth, private afs: AngularFirestore, private router: Router) { 
+  constructor(public afAuth: AngularFireAuth, private afs: AngularFirestore, private router: Router) {
     this.initClient();
     this.user = this.afAuth.authState.pipe(
       switchMap(user => {
@@ -64,19 +64,25 @@ export class AuthService {
 
     this.updateUserData(u.user);
 
-    this.router.navigate(['/']);
-
-
     // Alternative approach, use the Firebase login with scopes and make RESTful API calls
 
     // const provider = new auth.GoogleAuthProvider()
     // provider.addScope('https://www.googleapis.com/auth/calendar');
 
     // this.afAuth.auth.signInWithPopup(provider)
-    
+
   }
   logout() {
     this.afAuth.auth.signOut();
+  }
+
+  isLoggedIn(): boolean {
+    const u = this.afAuth.auth.currentUser;
+    return (u ? true: false);
+  }
+
+  currentUser(): User {
+    return this.afAuth.auth.currentUser;
   }
 
   // Sets user data to firestore after succesful login
@@ -92,6 +98,29 @@ export class AuthService {
       displayName: user.displayName || 'nameless user',
       photoURL: user.photoURL || 'https://goo.gl/Fz9nrQ'
     };
+
+    // this.chlDocument.collection<Chore>('chores').add(ch)
+    // .then(ref => {
+    //   ch.choreid = ref.id;
+    //   ch.choreName = '';
+    //   ch.choreWeight = 10;
+    //   this.addFormForChore(ch);
+    // })
+
+    const group = {
+      name: `${user.displayName}'s Chores`,
+      memberslist: [user.uid]
+    }
+    this.afs.collection<any>('groups').add(group).then(ref => {
+      this.afs.collection<any>(`groups/${ref.id}/members`).add(
+        {
+          uid: user.uid,
+          displayName: user.displayName,
+          admin: true
+        }
+      );
+    });
+
     return userRef.set(data);
   }
 
@@ -108,7 +137,7 @@ export class AuthService {
   //   console.log(events)
 
   //   this.calendarItems = events.result.items;
-  
+
   // }
 
   // async insertEvent() {
@@ -132,4 +161,4 @@ export class AuthService {
 
 }
 
-const hoursFromNow = (n) => new Date(Date.now() + n * 1000 * 60 * 60 ).toISOString();
+const hoursFromNow = (n) => new Date(Date.now() + n * 1000 * 60 * 60).toISOString();

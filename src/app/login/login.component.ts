@@ -20,10 +20,16 @@ export class LoginComponent implements OnInit {
   ngOnInit() {
     // get return url from route parameters or default to '/'
     this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
+    console.log("the return URL is: ", this.returnUrl);
   }
 
-  doLogin(){
-    this.authsvc.login()
+  async doLogin(){
+    await this.authsvc.login();
+    if (this.returnUrl) {
+      this.router.navigateByUrl(this.returnUrl);
+    } else {
+      this.router.navigate(['/']);
+    }
   }
   doLogout(){
     this.authsvc.logout()

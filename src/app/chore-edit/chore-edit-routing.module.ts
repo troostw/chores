@@ -3,7 +3,8 @@ import { Routes, RouterModule } from '@angular/router';
 import { EditchoreComponent } from './editchore/editchore.component';
 
 const routes: Routes = [
-  {path: ':id', component: EditchoreComponent}
+  {path: ':id', component: EditchoreComponent},
+  {path: ':id/:groupid', component: EditchoreComponent}
 ];
 
 @NgModule({

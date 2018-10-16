@@ -18,6 +18,7 @@ import { LoginComponent } from './login/login.component';
 import { HttpClientModule } from '@angular/common/http';
 import { InviteComponent } from './invite/invite.component';
 import { ReactiveFormsModule } from '@angular/forms';
+import { InvitecompleteComponent } from './invitecomplete/invitecomplete.component';
 
 // Add your project credentials
 // Then use it in the imports section below
@@ -36,7 +37,8 @@ const yourFirebaseConfig = {
     ChorenavComponent,
     ChoreshomeComponent,
     LoginComponent,
-    InviteComponent
+    InviteComponent,
+    InvitecompleteComponent
   ],
   imports: [
     BrowserModule,

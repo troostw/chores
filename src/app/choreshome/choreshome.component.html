@@ -1,5 +1,5 @@
 <div class="grid-container">
-  <h1 class="mat-h1">My chores </h1>
+  <!-- <h1 class="mat-h1">My chores </h1>
   <mat-grid-list cols="2" rowHeight="350px">
     <mat-grid-tile *ngFor="let chore of choresObs | async" [colspan]="1" [rowspan]="1">
       <mat-card class="dashboard-card">
@@ -21,44 +21,46 @@
         </mat-card-content>
       </mat-card>
     </mat-grid-tile>
-  </mat-grid-list>
-  <h1 class="mat-h1">Assigned To </h1>
-  <mat-form-field>
-    <mat-select placeholder="People" ([value])="selectedAssigned" (selectionChange)="handleAssigned($event)">
-      <mat-option *ngFor="let person of people" [value]="person.uid">
-        {{person.name}}
-      </mat-option>
-    </mat-select>
-  </mat-form-field>
+  </mat-grid-list> -->
+  <h1 class="mat-h1">My Chores </h1>
+  <div *ngIf="selectionCount>0">
+    <mat-form-field>
+      <mat-select placeholder="People" ([value])="selectedAssigned" (selectionChange)="handleAssigned($event)">
+        <mat-option *ngFor="let person of people" [value]="person.uid">
+          {{person.name}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
   <mat-grid-list cols="2" rowHeight="350px">
     <mat-grid-tile *ngFor="let choreInstance of choreInstancesObs | async" [colspan]="1" [rowspan]="1">
       <mat-card class="dashboard-card">
         <mat-card-header>
           <mat-card-title>
-            <h3><a routerLink="choreInstanceEdit/{{choreInstance.choreInstanceId}}">{{choreInstance.choreDate}}</a></h3>
+            <h3>{{choreInstance.choreName}}</h3>
             <button mat-icon-button class="more-button" [matMenuTriggerFor]="menu" aria-label="Toggle menu">
               <mat-icon>more_vert</mat-icon>
             </button>
             <mat-menu #menu="matMenu" xPosition="before">
-              <button mat-menu-item>Expand</button>
+              <button mat-menu-item routerLink="choreedit/{{choreInstance.choreid}}/{{choreInstance.groupid}}">Expand</button>
               <button mat-menu-item>Remove</button>
             </mat-menu>
           </mat-card-title>
         </mat-card-header>
         <mat-card-content class="dashboard-card-content">
           <div><img [src]="choreInstance.choreImageUrl" width=50px></div>
-          <div>As Of: {{choreInstance.choreDate.toDate() | date:'MMM dd'}}</div>
+          <div>Date: {{choreInstance.choreDate.toDate() | date:'MMM dd'}}</div>
           <div>
-            <mat-checkbox class="example-margin" [(checked)]="choreInstance.selected">Select</mat-checkbox>
+            <mat-checkbox class="example-margin" [(checked)]="choreInstance.selected" (change)="selectionChanged($event)">Select</mat-checkbox>
           </div>
         </mat-card-content>
       </mat-card>
     </mat-grid-tile>
   </mat-grid-list>
 </div>
-<button class="button-bottom-right" mat-fab mat-fab-bottom-right (click)="addChore()" aria-label="Add a chorelist">
+<button class="button-bottom-right" mat-fab mat-fab-bottom-right (click)="addChore()" aria-label="Add a Chore">
   <mat-icon>add</mat-icon>
 </button>
-<button class="button-bottom-right" mat-fab mat-fab-bottom-right (click)="sendVerifyEmail()" aria-label="Add a chorelist">
+<!-- <button class="button-bottom-right" mat-fab mat-fab-bottom-right (click)="sendVerifyEmail()" >
   <mat-icon>back</mat-icon>
-</button>
+</button> -->

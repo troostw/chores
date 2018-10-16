@@ -26,6 +26,6 @@ export class InviteComponent implements OnInit {
 
   doCancel(){
     console.log("Going to do cancel");
-    this.dialogRef.close("we cancelled");
+    this.dialogRef.close({invite: false});
   }
 }
